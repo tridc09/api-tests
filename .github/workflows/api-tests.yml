@@ -15,13 +15,13 @@ jobs:
     steps:
       # 1. Download source code
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 2. Setup Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
 
       # 3. Install Newman and HTML Reporter
       - name: Install Newman
@@ -32,17 +32,17 @@ jobs:
       # 4. Run API Tests
       - name: Run API Tests
         run: |
-          newman run "Restful-Booker-API2.postman_collection.json" \
-            -e "Dev.postman_environment.json" \
+          newman run "collections/Restful-Booker-API2.postman_collection.json" \
+            -e "env/Dev.postman_environment.json" \
             --reporters cli,htmlextra \
-            --reporter-htmlextra-export newman-report.html
+            --reporter-htmlextra-export reports/newman-report.html
 
       # 5. Upload HTML Report
       - name: Upload Newman Report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
-          name: Newman-HTML-Report
-          path: newman-report.html
+          name: API-Test-Report
+          path: reports/newman-report.html
           if-no-files-found: ignore
           retention-days: 14
