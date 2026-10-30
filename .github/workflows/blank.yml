@@ -1,0 +1,50 @@
+# This is a basic workflow to help you get started with Actions
+
+name: API Testing v2
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Download source code
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      # 3. Install Newman and HTML Reporter
+      - name: Install Newman
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      # 4. Run API Tests
+      - name: Run API Tests
+        run: |
+          newman run "collections/Restful-Booker-API.postman_collection.json" \
+            -e "env/Dev.postman_environment.json" \
+            -d "collections/booking_data.json"\
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export reports/newman-report.html
+
+      # 5. Upload HTML Report
+      - name: Upload Newman Report
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: API-Test-Report
+          path: reports/newman-report.html
+          if-no-files-found: ignore
+          retention-days: 14
