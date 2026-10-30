@@ -13,27 +13,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Download source code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
 
+      # 3. Install Newman and HTML Reporter
       - name: Install Newman
         run: |
           npm install -g newman
           npm install -g newman-reporter-htmlextra
 
+      # 4. Run API Tests
       - name: Run API Tests
         run: |
-          newman run "Restful-Booker-API2.postman_collection.json" -r htmlextra
-          
+          newman run "Restful-Booker-API2.postman_collection.json" \
+            -e "Dev.postman_environment.json" \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export newman-report.html
+
+      # 5. Upload HTML Report
       - name: Upload Newman Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: newman-report
+          name: Newman-HTML-Report
           path: newman-report.html
           if-no-files-found: ignore
+          retention-days: 14
