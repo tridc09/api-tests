@@ -1,0 +1,19 @@
+name: API Tests                           # CI: tên pipeline
+on:                                       # CI: KHI NÀO chạy
+  push:                                   # CI: mỗi lần có commit mới
+  workflow_dispatch:                      # CI: cho phép bạn bấm chạy tay
+jobs:
+  test:
+    runs-on: ubuntu-latest                # CI: máy ảo Linux do GitHub cấp
+    steps:
+      - uses: actions/checkout@v4         # CI: tải repo về máy ảo
+      - uses: actions/setup-node@v4       # CI: cài Node.js
+        with:
+          node-version: 20
+      - run: npm install -g newman newman-reporter-htmlextra   # Newman: cài công cụ
+      - run: newman run Booking-Monitor.postman_collection.json -r cli,htmlextra --reporter-htmlextra-export report.html   # Newman: chạy collection
+      - uses: actions/upload-artifact@v4  # CI: lưu báo cáo để tải về
+        if: always()
+        with:
+          name: api-report
+          path: report.html
