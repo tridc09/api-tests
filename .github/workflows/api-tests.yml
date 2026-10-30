@@ -1,19 +1,41 @@
-name: API Tests                           # CI: tên pipeline
-on:                                       # CI: KHI NÀO chạy
-  push:                                   # CI: mỗi lần có commit mới
-  workflow_dispatch:                      # CI: cho phép bạn bấm chạy tay
+
+name: API Testing with Newman
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
 jobs:
-  test:
-    runs-on: ubuntu-latest                # CI: máy ảo Linux do GitHub cấp
+  api-tests:
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4         # CI: tải repo về máy ảo
-      - uses: actions/setup-node@v4       # CI: cài Node.js
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-      - run: npm install -g newman newman-reporter-htmlextra   # Newman: cài công cụ
-      - run: newman run Booking-Monitor.postman_collection.json -r cli,htmlextra --reporter-htmlextra-export report.html   # Newman: chạy collection
-      - uses: actions/upload-artifact@v4  # CI: lưu báo cáo để tải về
+          node-version: 22
+
+      - name: Install Newman
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      - name: Run API Tests
+        run: |
+          newman run DataIntegrity.postman_collection.json \
+            -r htmlextra \
+            --reporter-htmlextra-export newman-report.html
+
+      - name: Upload Newman Report
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: api-report
-          path: report.html
+          name: newman-report
+          path: newman-report.html
+          if-no-files-found: ignore
