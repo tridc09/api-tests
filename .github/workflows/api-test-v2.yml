@@ -35,6 +35,7 @@ jobs:
           newman run "collections/Restful-Booker-API.postman_collection.json" \
             -e "env/Dev.postman_environment.json" \
             -d "collections/booking_data.json"\
+            --delay-request 1000 \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export reports/newman-report.html
 
