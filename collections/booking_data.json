@@ -1,0 +1,8 @@
+[
+  { "case_name": "valid_normal",     "firstname": "An",    "lastname": "Nguyen",  "totalprice": 150, "checkin": "2026-11-10", "checkout": "2026-11-13", "expected_status": 200 },
+  { "case_name": "valid_price_zero", "firstname": "Binh",  "lastname": "Tran",    "totalprice": 0,   "checkin": "2026-11-10", "checkout": "2026-11-13", "expected_status": 200 },
+  { "case_name": "special_chars",    "firstname": "Nguyễn & <Lan>", "lastname": "O'Brien", "totalprice": 200, "checkin": "2026-11-10", "checkout": "2026-11-13", "expected_status": 200 },
+  { "case_name": "empty_firstname",  "firstname": "",      "lastname": "Le",      "totalprice": 150, "checkin": "2026-11-10", "checkout": "2026-11-13", "expected_status": 400 },
+  { "case_name": "negative_price",   "firstname": "Chi",   "lastname": "Pham",    "totalprice": -50, "checkin": "2026-11-10", "checkout": "2026-11-13", "expected_status": 400 },
+  { "case_name": "price_is_text",    "firstname": "Dung",  "lastname": "Vo",      "totalprice": "abc", "checkin": "2026-11-10", "checkout": "2026-11-13", "expected_status": 400 }
+]
