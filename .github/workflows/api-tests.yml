@@ -28,7 +28,7 @@ jobs:
 
       - name: Run API Tests
         run: |
-          newman run Restful-Booker-API2.postman_collection.json \
+          newman run "Restful-Booker-API2.postman_collection.json" \
             -r htmlextra \
             --reporter-htmlextra-export newman-report.html
 
